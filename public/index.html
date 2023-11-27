@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>My App</title>
+
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <div class="container" style="padding-top: 20px">
+      <input
+        placeholder="0x..."
+        id="searchInput"
+        class="js-search"
+        type="text"
+      />
+      <button class="custom-btn btn-5" onclick="searchCSV()">
+        <span>CHECK MY WALLET ADDRESS</span>
+      </button>
+    </div>
+
+    <div class="text-center" id="result" style="font-size: 20px"></div>
+  </body>
+
+  <script>
+    function searchCSV() {
+      const inputValue = document.getElementById('searchInput').value;
+
+      if (inputValue === '') {
+        alert('Empty value.');
+        return false;
+      }
+
+      // Send a request to the Node Back-End
+      fetch(
+        `http://localhost:3000/search-csv?inputValue=${encodeURIComponent(
+          inputValue
+        )}`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          // Display the result.
+          const resultDiv = document.getElementById('result');
+
+          resultDiv.innerHTML = data.isValuePresent
+            ? 
+              '<p style="color: #fff; font-family: Maria Unconnected; font-size: 24px;">' +
+              ' <span style="color: #4af009">⌣</span> WALLET CONFIRMED'+
+              '</p>'
+
+            : 
+              '</p>' +
+              '<p style="color: #fff; font-family: Maria Unconnected; font-size: 24px;">' +
+              ' <span style="color: #f0094a">X</span> WALLET NOT FOUND'+
+              '</p>'
+        })
+        .catch((error) => console.error('Error fetching data:', error));
+    }
+  </script>
+</html>
